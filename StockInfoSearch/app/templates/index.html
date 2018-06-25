@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>StockInfo-股票基本面数据查询</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<div id="container">
+    <div id="bd">
+        <div id="main">
+            <h1 class="title">
+                <div class="logo large"></div>
+            </h1>
+            <div class="nav ue-clear">
+                <ul class="searchList">
+                    <li class="searchItem current">全文搜索</li>
+                    <li class="searchItem">股票代码</li>
+                    <li class="searchItem">股票名称</li>
+                    <li class="searchItem">隶属板块</li>
+                    <li class="searchItem">商业业务</li>
+                    <li class="searchItem">主营业务</li>
+                    <li class="searchItem">公司详情</li>
+                </ul>
+            </div>
+            <div class="inputArea">
+                <input type="text" class="searchInput"/>
+                <input type="button" class="searchButton"/>
+            </div>
+
+        </div><!-- End of main -->
+    </div><!--End of bd-->
+
+    <div class="foot">
+        <div class="wrap">
+            <div class="copyright">Copyright 版权所有 Group-2 吴玉景/冉见祥/魏安琪/雍茹莉/王桂玲/张晓帆</div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/global.js') }}"></script>
+<script type="text/javascript">
+
+	$('.searchList').on('click', '.searchItem', function(){
+		$('.searchList .searchItem').removeClass('current');
+		$(this).addClass('current');
+	})
+
+
+    // 单击搜索按钮触发事件
+    $('.searchButton').click(function(){
+    // 搜索框内容
+    var search_text = document.getElementsByClassName("searchInput")[0].value;
+    // 搜索条件
+    var condition_value = document.getElementsByClassName("searchItem current")[0].innerText;
+    data={"content": search_text, "field_name": condition_value};
+    $.ajax({
+        type:"POST",
+        url:"/search",
+        async:true,
+        data:data,
+        dataType:"json",
+        success: function (data) {
+            if(data!=undefined){
+            window.location.href = '/result?content=' + data["content"] + '&field=' + data["field"]
+        }}
+        })
+    })
+
+</script>
+</html>

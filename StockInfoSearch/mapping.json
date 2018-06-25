@@ -1,0 +1,54 @@
+{
+  "info": {
+    "properties": {
+      "BK": {
+        "type": "text",
+        "analyzer": "ik_max_word"
+      },
+      "BUSINSCOPE": {
+        "type": "text",
+        "analyzer": "ik_max_word"
+      },
+      "COMPPROFILE": {
+        "type": "text",
+        "analyzer": "ik_max_word"
+      },
+      "COMPSCOPE": {
+        "type": "text",
+        "analyzer": "ik_max_word"
+      },
+      "ChangePercent": {
+        "type": "float"
+      },
+      "Close": {
+        "type": "float"
+      },
+      "HXTC": {
+        "type": "text",
+        "analyzer": "ik_max_word"
+      },
+      "LTGB": {
+        "type": "float"
+      },
+      "LTSZ": {
+        "type": "float"
+      },
+      "MAINBUSIN": {
+        "type": "text",
+        "analyzer": "ik_max_word"
+      },
+      "MarketValue": {
+        "type": "float"
+      },
+      "PB": {
+        "type": "float"
+      },
+      "PERation": {
+        "type": "float"
+      },
+      "ZGB": {
+        "type": "float"
+      }
+    }
+  }
+}

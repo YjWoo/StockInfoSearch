@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>StockInfo-股票基本面数据查询</title>
+    <link href="{{ url_for('static', filename='css/result.css') }}" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<div id="container">
+    <div id="hd" class="ue-clear">
+        <div class="logo"></div>
+        <div class="inputArea">
+            <input type="text" class="searchInput" value="{{content}}"/>
+            <input type="button" class="searchButton"/>
+        </div>
+    </div>
+    <div class="nav">
+        <ul class="searchList">
+            {% for i in fields %}
+            {% if i == field_name %}
+            <li class="searchItem current">{{i}}</li>
+            {% else %}
+            <li class="searchItem">{{i}}</li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    <div id="bd" class="ue-clear">
+        <div id="main">
+            <div class="resultArea">
+                <p class="resultTotal">
+                    <span class="info">找到约&nbsp;<span class="totalResult">{{total}}</span>&nbsp;条结果，共<span
+                            class="totalPage">{{page}}</span>页</span>
+                    <span class="orderOpt">
+                    	<a href="javascript:;" class="_score" onclick="getSort(this)">按相关度排序</a>
+						<a href="javascript:;" class="PB" onclick="getSort(this)">按市净率排序</a>
+                        <a href="javascript:;" class="PERation" onclick="getSort(this)">按市盈率排序</a>
+						<a href="javascript:;" class="Close" onclick="getSort(this)">按股价排序</a>
+						<a href="javascript:;" class="ChangePercent" onclick="getSort(this)">按涨跌幅排序</a>
+						<a href="javascript:;" class="LTSZ" onclick="getSort(this)">按流通市值排序</a>
+                        {% if sort_direction %}
+						    {% if sort_direction == 'desc' %}
+                            <input type="radio" name="sort" value="asc">升序
+						    <input type="radio" name="sort" value="desc" checked>降序
+                            {% elif sort_direction == 'asc' %}
+                            <input type="radio" name="sort" value="asc" checked>升序
+						    <input type="radio" name="sort" value="desc">降序
+                            {% endif %}
+                        {% else %}
+                        <input type="radio" name="sort" value="asc">升序
+						<input type="radio" name="sort" value="desc" checked>降序
+                        {% endif %}
+                    </span>
+                </p>
+
+                <div class="resultList">
+                    {% for item in data %}
+                    <div class="resultItem">
+                        <div class="itemHead">
+                            <a href={{"/detail/"+item.code}}
+                               target="_blank">{{item.code}}<span>{{item.code_name}}</span></a>
+                            <span class="divsion">-</span>
+                            <span class="fileType">
+                            	<span class="label">相关度：</span>
+                                <span class="value">{{item.score}}</span>
+                            </span>
+                        </div>
+                        <div class="itemBody">
+                            <span>{% autoescape false %}{{item.highlight}}{% endautoescape %}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- 分页 -->
+                    <div class="pagination ue-clear"></div>
+
+                </div>
+
+            </div><!-- End of main -->
+        </div><!--End of bd-->
+    </div>
+    <div align="center">Copyright 版权所有 Group-2 吴玉景/冉见祥/魏安琪/雍茹莉/王桂玲/张晓帆</div>
+</body>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/global.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/pagination.js') }}"></script>
+<script type="text/javascript">
+	$('.searchList').on('click', '.searchItem', function(){
+		$('.searchList .searchItem').removeClass('current');
+		$(this).addClass('current');
+	});
+
+	//分页
+	$(".pagination").pagination({{total}}, {
+		current_page :{{start}}, //当前页码
+		items_per_page :10,
+		display_msg :true,
+		callback :pageselectCallback
+	});
+
+	function pageselectCallback(page_id, jq) {
+        data={"content": "{{content}}", "field_name": "{{field_name}}","from":page_id,"sort_field": "{{sort_field}}","sort_direction": "{{sort_direction}}"};
+        $.ajax({
+            type:"POST",
+            url:"/search",
+            async:true,
+            data:data,
+            dataType:"json",
+            success: function(msg) {
+            if(msg!=undefined){
+            window.location.href = '/result?content=' + msg["content"] + '&field=' + msg["field"]+'&start='+msg['start']+ '&sort_field=' + msg["sort_field"]+ '&sort_direction=' + msg["sort_direction"];;
+        }}
+        })
+	}
+
+
+    // 单击搜索按钮触发事件
+    $('.searchButton').click(function(){
+    // 搜索框内容
+    var search_text = document.getElementsByClassName("searchInput")[0].value;
+    // 搜索条件
+    var condition_value = document.getElementsByClassName("searchItem current")[0].innerText;
+    data={"content": search_text, "field_name": condition_value};
+    $.ajax({
+        type:"POST",
+        url:"/search",
+        async:true,
+        data:data,
+        dataType:"json",
+        success: function (msg) {
+            if(msg!=undefined){
+            window.location.href = '/result?content=' + msg["content"] + '&field=' + msg["field"];
+        }}
+        })
+    })
+
+    // 单击排序条件触发事件
+    function getSort(obj){
+    //    获取排序条件
+    var sort_text = obj.getAttribute("class");
+    var radio = document.getElementsByName("sort");
+
+    var sort_condition;
+    for (i=0; i<radio.length; i++) {
+        if (radio[i].checked) {
+            sort_condition = radio[i].value;
+        }
+    }
+    var search_text = document.getElementsByClassName("searchInput")[0].value;
+    var condition_value = document.getElementsByClassName("searchItem current")[0].innerText;
+    $.ajax({
+        url: "/search",
+        type: "post",
+        data: {"sort_field": sort_text, "sort_direction": sort_condition, "content": search_text, "field_name": condition_value},
+        dataType: "json",
+        success: function(msg) {
+            if(msg!=undefined){
+            window.location.href = '/result?content=' + msg["content"] + '&field=' + msg["field"]+ '&sort_field=' + msg["sort_field"]+ '&sort_direction=' + msg["sort_direction"];
+        }}
+    });
+}
+
+
+
+
+
+</script>
+</html>

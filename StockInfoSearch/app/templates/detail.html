@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>搜索结果</title>
+    <link href="{{ url_for('static', filename='css/result.css') }}" rel="stylesheet" type="text/css"/>
+
+
+    <style type="text/css">
+        #table{
+            margin: 6% auto;
+            width: 70%;
+            height: 200px;
+        }
+        td{
+            height:20px;
+            border: 1px solid black;
+        }
+
+    </style>
+
+</head>
+
+
+<div id="container">
+    <table id="table">
+        <tr>
+            <td colspan=2><span id="SECURITYCODE">股票代码：{{data['SECURITYCODE']}}</span></td>
+            <td colspan=2><span id="SECURITYSHORTNAME">股票名称：{{data['SECURITYSHORTNAME']}}</span></td>
+        </tr>
+        <tr>
+            <td colspan=4>数值(市盈、股本等)</td>
+        <tr>
+            <td colspan=1><span id="PERation">市盈率：{{ data['PERation'] }}</span></td>
+            <td colspan=1><span id="PB">市净率：{{data['PB']}}</span></td>
+            <td colspan=1><span id="Close">最近收盘价：{{data['Close']}}</span></td>
+            <td colspan=1><span id="ChangePercent">最近幅度：{{data['ChangePercent']}}</span></td>
+        </tr>
+        <tr>
+            <td colspan=1><span id="ZGB">总股本：{{data['ZGB']}}</span></td>
+            <td colspan=1><span id="MarketValue">市值：{{data['MarketValue']}}</span></td>
+            <td colspan=1><span id="LTGB">流通股本：{{data['LTGB']}}</span></td>
+            <td colspan=1><span id="LTSZ">流通市值：{{data['LTSZ']}}</span></td>
+        </tr>
+        </tr>
+        <tr>
+            <td colspan=2><span id="LISTINGDATE">公司状态：{{data['LISTINGDATE']}}</span></td>
+            <td colspan=2><span id="LISTINGTYPE">上市日期：{{data['LISTINGTYPE']}}</span></td>
+        </tr>
+        <tr>
+            <td colspan=4><span id="BK">股票所在版块：{{data['BK']}}</span></td>
+        </tr>
+        <tr>
+            <td colspan=4><span id="MAINBUSIN">主营业务：{{data['MAINBUSIN']}}</span></td>
+        </tr>
+        <tr>
+            <td colspan=4><span id="BUSINSCOPE">商业业务范围：{{data['BUSINSCOPE']}}</span></td>
+        </tr>
+        <tr>
+            <td colspan=4><span id="ZYCP">主营产品：{{data['ZYCP']}}</span></td>
+        </tr>
+        <tr>
+            <td colspan=4><span id="COMPPROFILE">公司简介：{{data['COMPPROFILE']}}</span></td>
+        </tr>
+        <tr>
+            <td colspan=4><span id="COMPSCOPE">公司沿革：{{data['COMPSCOPE']}}</span></td>
+        </tr>
+        <tr>
+            <td colspan=4><span id="HXTC">公司详情：{{data['HXTC']}}</span></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/global.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/pagination.js') }}"></script>
+<script type="text/javascript">
+	$('.searchList').on('click', '.searchItem', function(){
+		$('.searchList .searchItem').removeClass('current');
+		$(this).addClass('current');	
+	});
+
+
+</script>
+
+</html>
