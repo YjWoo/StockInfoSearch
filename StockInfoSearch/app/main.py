@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, request
-from StockInfoSearch.es.EsDAO import search_by_code, all_search, bool_search
-from StockInfoSearch.settting import *
+from StockInfoSearch.es.EsDAO import search_by_code, all_search, bool_search, show_all
+from StockInfoSearch.setting import *
 from StockInfoSearch.util.util import page_count, result_page
 
 app = Flask(__name__)
@@ -24,7 +24,10 @@ def result():
     sort_direction = 'desc' if ('sort_direction' not in args_keys) else args['sort_direction']
 
     if field == 'ALL':
-        res = all_search(content, sort={sort_field: sort_direction}, start=start, size=10)
+        if content != '':
+            res = all_search(content, sort={sort_field: sort_direction}, start=start, size=10)
+        else:
+            res = show_all(sort_field, sort_direction, start=start, size=10)
     else:
         res = bool_search(content, field, sort={sort_field: sort_direction}, start=start, size=10)
     total = res['total']
@@ -34,7 +37,7 @@ def result():
     return render_template("result.html", content=content, total=total, page=page, start=start / 10, data=data,
                            field=field,
                            field_name=CONDITION_KEY[field],
-                           fields=fields,sort_field=sort_field,sort_direction=sort_direction)
+                           fields=fields, sort_field=sort_field, sort_direction=sort_direction)
 
 
 @app.route('/search', methods=['POST'])

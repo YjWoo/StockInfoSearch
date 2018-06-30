@@ -64,7 +64,7 @@
                                target="_blank">{{item.code}}<span>{{item.code_name}}</span></a>
                             <span class="divsion">-</span>
                             <span class="fileType">
-                            	<span class="label">相关度：</span>
+                            	<span class="label">排序值：</span>
                                 <span class="value">{{item.score}}</span>
                             </span>
                         </div>
@@ -112,7 +112,7 @@
             dataType:"json",
             success: function(msg) {
             if(msg!=undefined){
-            window.location.href = '/result?content=' + msg["content"] + '&field=' + msg["field"]+'&start='+msg['start']+ '&sort_field=' + msg["sort_field"]+ '&sort_direction=' + msg["sort_direction"];;
+            window.location.href = '/result?content=' + msg["content"] + '&field=' + msg["field"]+'&start='+msg['start']+ '&sort_field=' + msg["sort_field"]+ '&sort_direction=' + msg["sort_direction"];
         }}
         })
 	}

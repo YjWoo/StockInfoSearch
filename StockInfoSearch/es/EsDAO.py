@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch
 import traceback
-from StockInfoSearch.settting import *
+from StockInfoSearch.setting import *
 from StockInfoSearch.util.util import split_str
 
 es = Elasticsearch(['%s:%s' % (ES_HOST, ES_PORT)])
@@ -67,6 +67,9 @@ def all_search(content, sort={'_score': 'desc'}, start=0, size=10):
            'sort': sort}
     return search(dsl)['hits']
 
+def show_all(sort_field,sort_direction,start,size=10):
+    res = search({'query': {'match_all': {}},'sort':{sort_field: sort_direction},'from':start,'size':size})
+    return res['hits']
 
 if __name__ == '__main__':
     # res = bool_search(['小米'], 'HXTC', start=0, size=10)
@@ -79,5 +82,6 @@ if __name__ == '__main__':
     # for i in res:
     #     print(i['_score'])
 
-    res = bool_search('小米', 'BK')
+    # res = bool_search('小米', 'BK',sort={'PB':'desc'})
+    res=show_all('PB','asc',0,10)
     print(res)
